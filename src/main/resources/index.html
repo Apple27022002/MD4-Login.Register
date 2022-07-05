@@ -31,7 +31,10 @@
 <input type="text" id="from">
 <input type="text" id="to">
 <button onclick="findByPriceBetween()">Find</button>
-<div id="display"></div>
+
+<div id="display">
+
+</div>
 
 <script>
     let show = document.getElementById("display");
@@ -46,11 +49,26 @@
             },
             url: API_product,
             success: function (data) {
-                display(data)
+                console.log(data)
+                loadTableProduct(data)
             }, error: function (error) {
                 console.log(error);
             }
         })
+    }
+    function loadTableProduct(products) {
+        let str = "";
+        for (let i = 0; i < products.length; i++) {
+            str += `<table><tr>
+                    <td>${products[i].id} .</td>
+                    <td>${products[i].name} .</td>
+                    <td>${products[i].price} .</td>
+                    <td>${products[i].category.name}</td>
+                    <td> <button type="button" onclick="showEditForm"> Edit </button></td>
+                    <td> <button type="button" > Delete</button></td>
+                </tr></table>`
+        }
+        show.innerHTML = str;
     }
 
     function findByPriceBetween() {
@@ -101,35 +119,36 @@
             "    <button onclick='save()'>Thêm</button>"
         show.innerHTML = str;
     }
-
     function save() {
         let name = document.getElementById("name").value;
         let price = document.getElementById("price").value;
         let categoryId = document.getElementById("category").value;
         let pro = {
-            name: name,
+            name: name, //name trước: là tên thuộc tính của đtượng pro , sau :là giá trị được lấy ở trên
             price: price,
             category: {
                 id: categoryId
             }
         }
+        console.log(pro)
         $.ajax({
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            type: 'POST',
-            headers:{
-                Authorization: 'Bearer ' + localStorage.getItem('token')
-            },
-            url: API_product,
-            data: JSON.stringify(pro),
-            success: function () {
-                findAll()
-            },
-            error: function (error) {
-                console.log(error)
-            }
+                headers: {
+                    Authorization: 'Bearer ' + localStorage.getItem('token'),
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                type: 'POST',
+                url: 'http://localhost:8000/products',
+                data: JSON.stringify(pro),
+                success: function () {
+                    findAll()
+                },
+                error: function (error) {
+                    console.log(error)
+                    alert("Bạn không vào được trang này ")
+
+                }
+
         })
     }
 
@@ -158,10 +177,58 @@
             }
         })
     }
-    function logout(){
+    function showEditForm(id) {
+        $.ajax({
+            type: "GET",
+            headers:{
+                Authorization: 'Bearer ' + localStorage.getItem("token")
+            },
+            url: API + id,
+            success: function (data) {
+                console.log(data)
+                document.getElementById('id').value = data.id;
+                document.getElementById('nameEdit').value = data.name;
+                document.getElementById('addressEdit').value = data.price;
+                document.getElementById('bedroomEdit').value = data.category.id;
+
+            }
+        })
+    }
+        //
+        // //hàm sửa :  sửa cả ảnh
+        // function update() {
+        //     let id = document.getElementById('id').value;
+        //     let formData = new FormData(editForm);
+        //     $.ajax({
+        //         type: "PUT",
+        //         headers:{
+        //             Authorization: 'Bearer ' + localStorage.getItem("token")
+        //         },
+        //         enctype: 'multipart/form-data',
+        //         url: API + id,
+        //         data: formData,
+        //         processData: false,
+        //         contentType: false,
+        //         cache: false,
+        //         success: function () {
+        //
+        //             // $('#exampleModal').modal('hide');
+        //
+        //             loadData();
+        //             editForm.reset();
+        //         },
+        //         error: function (error) {
+        //             console.log(error)
+        //         }
+        //     })
+        // }
+        //
+
+        function logout(){
         localStorage.removeItem('token');
 
     }
+
 
 </script>
 </body>
