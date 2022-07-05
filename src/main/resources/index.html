@@ -3,232 +3,479 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <!--    chú ý thư viện-->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css"
           integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
-            integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
-            crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF"
             crossorigin="anonymous"></script>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 
-</head>
 <body>
-<h1>Danh sách sản phẩm </h1>
-<button onclick="findAll()">Hiện dữ liệu</button>
-<button onclick="findAllByOrderByPrice()">Hiện dữ liệu sắp xếp theo giá</button>
-<button onclick="showAddForm()">Thêm mới</button>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="nav-link" data-toggle="modal" data-target="#exampleModal2" onclick="showRegisterForm()">Register</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
 
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" data-toggle="modal" data-target="#exampleModal3" onclick="showLoginForm()">login</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="modal" data-target="#exampleModal" onclick="showAddForm() ">Add</a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">
+                    Dropdown
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="#">Action</a>
+                    <a class="dropdown-item" href="#">Another action</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#">Something else here</a>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link disabled" href="#">Disabled</a>
+            </li>
+        </ul>
+        <div class="form-inline my-2 my-lg-0">
+            <input class="form-control mr-sm-2" type="search"
+                   placeholder="Search" aria-label="Search" id="search">
+            <button class="btn btn-outline-success my-2 my-sm-0" onclick="search()">Search</button>
+        </div>
+    </div>
+</nav>
 
-<div>
-    <input type="text" id="username">
-    <input type="text" id="password">
-    <button onclick="login()">login</button>
-    <button onclick="logout()">logout</button>
+<div id="content">
+
 </div>
-<hr>
-<input type="text" id="from">
-<input type="text" id="to">
-<button onclick="findByPriceBetween()">Find</button>
+<div class="row">
+    <div class="col-12">
+        <h3 style="text-align: center">House List</h3>
+        <table class="table table-hover table-dark">
+            <thead>
+            <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Name</th>
+                <th scope="col">Address</th>
+                <th scope="col">NumberOfBedroom</th>
+                <th scope="col">NumberOfBathroom</th>
+                <th scope="col">PricePerDay</th>
+                <th scope="col">Image</th>
+            </tr>
+            </thead>
+            <tbody id="list">
 
-<div id="display">
+            </tbody>
+        </table>
+    </div>
 
+    <!-- Button trigger modal -->
+
+    <!-- Modal phần tạo mới -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <form id="addForm">
+                        <label> Name </label>
+                        <input type="text" name="name" class="form-control">
+                        <label> Address </label>
+                        <input type="text" name="address" class="form-control">
+                        <label> Bedroom </label>
+                        <input type="number" name="numberOfBedroom" class="form-control">
+                        <label> Bathroom </label>
+                        <input type="number" name="numberOfBathroom" class="form-control">
+                        <label> Price </label>
+                        <input type="number" name="pricePerDay" class="form-control">
+                        <label> Image </label>
+                        <input type="file" name="file" class="form-control">
+                    </form>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button class="btn btn-primary" data-dismiss="modal" onclick="add()">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<!--modal phần edit-->
+<div class="modal fade" id="exampleModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel1">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editForm">
+                    <input type="hidden" id="id">
+                    <label> Name </label>
+                    <input type="text" name="name" class="form-control" id="nameEdit">
+                    <label> Address </label>
+                    <input type="text" name="address" class="form-control" id="addressEdit">
+                    <label> Bedroom </label>
+                    <input type="number" name="numberOfBedroom" class="form-control" id="bedroomEdit">
+                    <label> Bathroom </label>
+                    <input type="number" name="numberOfBathroom" class="form-control" id="bathroomEdit">
+                    <label> Price </label>
+                    <input type="number" name="pricePerDay" class="form-control" id="priceEdit">
+                    <label> Image </label>
+                    <div id="newFile"></div>
+                    <input type="file" name="fileEdit" class="form-control">
+
+                </form>
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button class="btn btn-primary" data-dismiss="modal" onclick="update()">Edit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--Modal phan dang ki-->
+<div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel2">Register</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="register">
+                    <label> Username </label>
+                    <input type="text" name="username" id="username" class="form-control">
+                    <label> Password</label>
+                    <input type="text" name="password" id="password" class="form-control">
+                    <label> confirmPassword </label>
+                    <input type="number" name="confirmPassword" id="confirmPassword" class="form-control">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button class="btn btn-primary" data-dismiss="modal" onclick="saveUser()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--modal phan dang nhap-->
+<div class="modal fade" id="exampleModal3" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="loginModalLabel">login</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="login">
+                    <label> Username </label>
+                    <input type="text" name="usernameLogin" id="usernameLogin" class="form-control">
+                    <label> Password</label>
+                    <input type="text" name="passwordLogin" id="passwordLogin" class="form-control">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button class="btn btn-primary" data-dismiss="modal" onclick="loginUser()">Login</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
-    let show = document.getElementById("display");
-    const API_product = "http://localhost:8000/products"
-    const API = "http://localhost:8000"
 
-    function findAll() {
+    let tbody = document.getElementById("list");
+    let addForm = document.getElementById("addForm");
+    let editForm = document.getElementById("editForm");
+    let register = document.getElementById("register");
+    let login = document.getElementById("login");
+
+    // hiển thị danh sách
+    function loadData() {
         $.ajax({
             type: "GET",
             headers:{
                 Authorization: 'Bearer ' + localStorage.getItem('token')
             },
-            url: API_product,
+            url: 'http://localhost:8000/houses',
             success: function (data) {
-                console.log(data)
-                loadTableProduct(data)
-            }, error: function (error) {
-                console.log(error);
-            }
-        })
-    }
-    function loadTableProduct(products) {
-        let str = "";
-        for (let i = 0; i < products.length; i++) {
-            str += `<table><tr>
-                    <td>${products[i].id} .</td>
-                    <td>${products[i].name} .</td>
-                    <td>${products[i].price} .</td>
-                    <td>${products[i].category.name}</td>
-                    <td> <button type="button" onclick="showEditForm"> Edit </button></td>
-                    <td> <button type="button" > Delete</button></td>
-                </tr></table>`
-        }
-        show.innerHTML = str;
-    }
+                display(data);
 
-    function findByPriceBetween() {
-        let from = document.getElementById('from').value;
-        let to = document.getElementById('to').value;
-        $.ajax({
-            type: "GET",
-            headers:{
-                Authorization: 'Bearer ' + localStorage.getItem('token')
+
             },
-            url: API_product + "/price-between/?from=" + from + "&to=" + to,
-            success: function (data) {
-                display(data)
-            }, error: function (error) {
-                console.log(error);
+            error: function (error) {
+                console.log(error)
             }
         })
+
     }
 
-    function findAllByOrderByPrice() {
-        $.ajax({
-            type: "GET",
-            headers:{
-                Authorization: 'Bearer ' + localStorage.getItem('token')
-            },
-            url: API_product + "/order-by-price",
-            success: function (data) {
-                display(data)
-            }, error: function (error) {
-                console.log(error);
-            }
-        })
-    }
-
+    // hiển thị
     function display(data) {
-        let str = ""
+        let str = "";
         console.log(data)
         for (let i = 0; i < data.length; i++) {
-            str += "<h3>" + data[i].name + ", " + data[i].price + "</h3>";
+            str += `<tr>
+                                <td>${i + 1}</td>
+                                <td>${data[i].name}</td>
+                                <td>${data[i].address}</td>
+                                <td>${data[i].numberOfBedroom}</td>
+                                <td>${data[i].numberOfBathroom}</td>
+                                <td>${data[i].pricePerDay}</td>
+                                <td><img src = "photos/${data[i].image}" width="100px"></td>
+                                <td><button class="btn btn-primary" data-toggle="modal" data-target="#exampleModal1" onclick="showEditForm(${data[i].id})">Edit</button></td>
+                                <td><button class="btn btn-primary" onclick="showDeleteForm(${data[i].id})">Delete</button></td>
+                            </tr>`
         }
-        show.innerHTML = str;
+        tbody.innerHTML = str;
     }
+
 
     function showAddForm() {
-        let str = "    <input type=\"text\" id=\"name\">\n" +
-            "    <input type=\"text\" id=\"price\">\n" +
-            "    <input type=\"text\" id=\"category\">\n" +
-            "    <button onclick='save()'>Thêm</button>"
-        show.innerHTML = str;
+        $("#exampleModal").modal("show");
+
     }
-    function save() {
-        let name = document.getElementById("name").value;
-        let price = document.getElementById("price").value;
-        let categoryId = document.getElementById("category").value;
-        let pro = {
-            name: name, //name trước: là tên thuộc tính của đtượng pro , sau :là giá trị được lấy ở trên
-            price: price,
-            category: {
-                id: categoryId
-            }
-        }
-        console.log(pro)
+
+    //save house
+    function add() {
+        let formData = new FormData(addForm);
+        console.log(formData)
         $.ajax({
-                headers: {
-                    Authorization: 'Bearer ' + localStorage.getItem('token'),
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                type: 'POST',
-                url: 'http://localhost:8000/products',
-                data: JSON.stringify(pro),
-                success: function () {
-                    findAll()
-                },
-                error: function (error) {
-                    console.log(error)
-                    alert("Bạn không vào được trang này ")
+            type: "POST",
+            headers:{
+                Authorization: 'Bearer ' + localStorage.getItem('token')
+            },
 
-                }
+            enctype: 'multipart/form-data',
+            url: "http://localhost:8000/houses",
+            data: formData,
+            processData: false,
+            contentType: false,
+            cache: false,
+            timeout: 1000000,
+            success: function (data) {
+                console.log(data)
+                $("#exampleModal").modal("hide");
+                loadData()
+                addForm.reset();
 
+            },
+            errors: function (error) {
+                console.log(error)
+            }
         })
+
     }
 
-    function login() {
+    //modal đăng kí
+    function showRegisterForm() {
+        $('#exampleModal2').modal('show');
+    }
 
-        let usn = document.getElementById("username").value;
-        let pw = document.getElementById("password").value;
-        let user = {
-            username: usn,
-            password: pw,
+    function saveUser() {
+        let username = document.getElementById('user name').value;
+        let password = document.getElementById('password').value;
+        let confirmPassword = document.getElementById('confirm Password').value;
+        let data = {
+            username: username,
+            password: password,
+            confirmPassword: confirmPassword
         }
         $.ajax({
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
             },
-            type: 'POST',
-            url: API + "/login",
-            data: JSON.stringify(user),
-            success: function (data) {
-                console.log(data)
-                localStorage.setItem('token',data.accessToken);
+            type: "POST",
+            url: "http://localhost:8000/register",
+            data: JSON.stringify(data),
+            success: function () {
+                alert("Register done!")
+                $('#exampleModal2').modal('hide');
+                register.reset();
             },
             error: function (error) {
                 console.log(error)
             }
         })
     }
+
+    function showLoginForm() {
+        $('#exampleModal3').modal('show');
+    }
+
+
+    function loginUser() {
+        let usernameLogin = document.getElementById('usernameLogin').value;
+        let passwordLogin = document.getElementById('passwordLogin').value;
+        let user = {
+            username: usernameLogin,
+            password: passwordLogin
+        }
+        $.ajax({
+            headers:{
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            type: "POST",
+            url: "http://localhost:8000/login",
+            data: JSON.stringify(user),
+            success: function (data) {
+                localStorage.setItem('token', data.accessToken);
+
+                $('#exampleModal3').modal('hide');
+                login.reset()
+                currentUser()
+            },
+            error: function (error) {
+                console.log(error)
+            }
+        })
+    }
+
+    function currentUser() {
+        document.getElementById("content").innerHTML = `  <button class="btn btn-primary"  onclick="roleUser()">User</button>`
+    }
+
+    function roleUser() {
+        $.ajax({
+            headers: {
+                Authorization: 'Bearer ' + localStorage.getItem("token")
+            },
+            type: "GET",
+            url: "http://localhost:8000/users",
+            success: function (data) {
+                console.log(data)
+                writeUser(data)
+                loadData()
+            },
+            error: function (error) {
+                document.getElementById("content").innerHTML = `<h4>Bạn không có quyền ở đây<\h4>`
+
+                console.log(error)
+            }
+        })
+    }
+    function writeUser(data) {
+        let str = ""
+        for (let i = 0; i < data.length; i++) {
+            str += `<h4>Id : ${data[i].id}, ${data[i].username}- Tôi là User<\h4> `
+        }
+        document.getElementById("content").innerHTML = str
+    }
+
     function showEditForm(id) {
+        $("#exampleModal1").modal("show");
+
         $.ajax({
             type: "GET",
             headers:{
                 Authorization: 'Bearer ' + localStorage.getItem("token")
             },
-            url: API + id,
+            url: "http://localhost:8000/houses/" + id,
             success: function (data) {
                 console.log(data)
                 document.getElementById('id').value = data.id;
                 document.getElementById('nameEdit').value = data.name;
-                document.getElementById('addressEdit').value = data.price;
-                document.getElementById('bedroomEdit').value = data.category.id;
+                document.getElementById('addressEdit').value = data.address;
+                document.getElementById('bedroomEdit').value = data.numberOfBedroom;
+                document.getElementById('bathroomEdit').value = data.numberOfBathroom;
+                document.getElementById('priceEdit').value = data.pricePerDay;
+                document.getElementById('newFile').innerHTML = `<img src="photos/${data.image}" width="100px" ">`;
 
             }
         })
     }
-        //
-        // //hàm sửa :  sửa cả ảnh
-        // function update() {
-        //     let id = document.getElementById('id').value;
-        //     let formData = new FormData(editForm);
-        //     $.ajax({
-        //         type: "PUT",
-        //         headers:{
-        //             Authorization: 'Bearer ' + localStorage.getItem("token")
-        //         },
-        //         enctype: 'multipart/form-data',
-        //         url: API + id,
-        //         data: formData,
-        //         processData: false,
-        //         contentType: false,
-        //         cache: false,
-        //         success: function () {
-        //
-        //             // $('#exampleModal').modal('hide');
-        //
-        //             loadData();
-        //             editForm.reset();
-        //         },
-        //         error: function (error) {
-        //             console.log(error)
-        //         }
-        //     })
-        // }
-        //
 
-        function logout(){
-        localStorage.removeItem('token');
+    //hàm sửa :  sửa cả ảnh
+    function update() {
+        let id = document.getElementById('id').value;
+        let formData = new FormData(editForm);
+        $.ajax({
+            type: "PUT",
+            headers:{
+                Authorization: 'Bearer ' + localStorage.getItem("token")
+            },
+            enctype: 'multipart/form-data',
+            url: "http://localhost:8000/houses/" + id,
+            data: formData,
+            processData: false,
+            contentType: false,
+            cache: false,
+            success: function () {
 
+                // $('#exampleModal').modal('hide');
+
+                loadData();
+                editForm.reset();
+            },
+            error: function (error) {
+                console.log(error)
+            }
+        })
     }
 
+    // hàm xóa
+    function showDeleteForm(id) {
+        if (confirm("Bạn có chắc chắn muốn xoá sản phẩm ko ???")) {
+            $.ajax({
+                headers:{
+                    Authorization: 'Bearer ' + localStorage.getItem("token")
+                },
+                type: 'DELETE',
+                url: 'http://localhost:8000/houses/' + id,
+                success: function () {
+                    loadData()
+                },
+                error: function (error) {
+                    console.log(error)
+                }
+            })
+        }
+    }
+
+    function search() {
+        let searchName = document.getElementById("search");
+        $.ajax({
+            type: "GET",
+            url: "http://localhost:8000/houses/search-name?name=" + searchName.value,
+            success: function (data) {
+                display(data)
+            }
+        });
+    }
+    //
 
 </script>
 </body>
